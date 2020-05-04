@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Fetal Monitoring App</string>
+    <string name="tab_text_1">Fetal Kick</string>
+    <string name="tab_text_2">Fetal ECG</string>
+    <string name="edit_text">Testing the Text box</string>
+    <string name="button_send">Send</string>
+</resources>
