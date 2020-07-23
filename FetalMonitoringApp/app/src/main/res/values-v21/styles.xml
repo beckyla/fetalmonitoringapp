@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Splash screen theme -->
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#00FFFFFF</item>
+        <item name="colorPrimaryDark">#00FFFFFF</item>
+        <item name="colorAccent">#00FFFFFF</item>
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/statusBar</item>
+    </style>
+
+    <!-- Main theme-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">#29000000</item>
+        <item name="statusBarForeground">@color/colorAccent</item>
+        <item name="statusBarBackground">@color/colorAccent</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Device Control Activity theme-->
+    <style name="AppTheme.Device">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">#80ABD6</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+</resources>

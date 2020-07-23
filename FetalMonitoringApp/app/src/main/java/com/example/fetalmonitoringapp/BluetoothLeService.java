@@ -32,24 +32,27 @@ public class BluetoothLeService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     private int connectionState = STATE_DISCONNECTED;
+    List<Integer> movementValues;
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
 
     public final static String ACTION_GATT_CONNECTED =
-            "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
+            "com.example.fetalmonitoringapp.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
-            "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
+            "com.example.fetalmonitoringapp.ACTION_GATT_DISCONNECTED";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
+            "com.example.fetalmonitoringapp.ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
-            "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
+            "com.example.fetalmonitoringapp.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
-            "com.example.bluetooth.le.EXTRA_DATA";
+            "com.example.fetalmonitoringapp.EXTRA_DATA";
 
     //Need to change this for UUID I'm using
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(GattAttributes.HEART_RATE_MEASUREMENT);
+    public final static UUID UUID_FETAL_KICK_MEASUREMENT = UUID.fromString("19B10000-E8F2-537E-4F6C-D104768A1216");
+    //public final static UUID UUID_FETAL_ECG_MEASUREMENT = UUID.fromString("19B10000-E8F2-537E-4F6C-D104768A1218");
 
     // Various callback methods defined by the BLE API.
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
@@ -107,6 +110,8 @@ public class BluetoothLeService extends Service {
 
         // This is special handling for the Heart Rate Measurement profile. Data
         // parsing is carried out as per profile specifications.
+
+        /*
         if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
             int format = -1;
@@ -125,12 +130,47 @@ public class BluetoothLeService extends Service {
             final byte[] data = characteristic.getValue();
             if (data != null && data.length > 0) {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
+                for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 intent.putExtra(EXTRA_DATA, new String(data) + "\n" +
                         stringBuilder.toString());
             }
         }
+
+         */
+
+        if (UUID_FETAL_KICK_MEASUREMENT.equals(characteristic.getUuid())) {
+            final byte[] data = characteristic.getValue();
+            int fetalKicks = data[0];
+            movementValues = ((MeasurementData) this.getApplication()).getMovementValues();
+            movementValues.add(fetalKicks);
+            ((MeasurementData) this.getApplication()).setMovementValues(movementValues);
+
+            Log.d(TAG, String.format("Received fetal kick count: %d", fetalKicks));
+            intent.putExtra(EXTRA_DATA, String.valueOf(fetalKicks));
+
+            /*
+            if (data != null && data.length > 0) {
+                final StringBuilder stringBuilder = new StringBuilder(data.length);
+                for (byte byteChar : data)
+                    stringBuilder.append(String.format("%02X ", byteChar));
+                intent.putExtra(EXTRA_DATA, new String(data) + "\n" +
+                        stringBuilder.toString());
+            }
+
+             */
+        }else {
+            // For all other profiles, writes the data formatted in HEX.
+            final byte[] data = characteristic.getValue();
+            if (data != null && data.length > 0) {
+                final StringBuilder stringBuilder = new StringBuilder(data.length);
+                for (byte byteChar : data)
+                    stringBuilder.append(String.format("%02X ", byteChar));
+                intent.putExtra(EXTRA_DATA, new String(data) + "\n" +
+                        stringBuilder.toString());
+            }
+        }
+
         sendBroadcast(intent);
     }
 

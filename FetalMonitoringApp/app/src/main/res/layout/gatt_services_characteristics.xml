@@ -1,10 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:fitsSystemWindows="true"
+    tools:context=".DeviceControlActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:background ="#99CCFF"
+            android:minHeight="?attr/actionBarSize"
+            app:contentInsetStart="0dp"
+            app:theme="@style/AppTheme.NoActionBar"
+            >
+        </androidx.appcompat.widget.Toolbar>
+
+        <ImageButton
+            android:id="@+id/back_arrow"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back_arrow"
+            android:onClick="backClick"
+            android:paddingLeft="10sp"
+            android:paddingRight="0dp"
+            android:paddingStart="10sp"
+            android:paddingEnd="0dp" />
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/back_arrow"
+            android:layout_toEndOf="@id/back_arrow"
+            android:layout_toLeftOf="@id/button_layout"
+            android:layout_toStartOf="@id/button_layout"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:textColor="@color/menuColor"
+            android:textSize="25sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/button_layout"
+            android:layout_width="100sp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:id="@+id/connect_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:onClick="connectClick"
+                android:stateListAnimator="@null"
+                android:text="@string/connect"
+                android:textColor="@color/textColor"
+                android:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/disconnect_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:onClick="disconnectClick"
+                android:stateListAnimator="@null"
+                android:text="@string/disconnect"
+                android:textColor="@color/textColor"
+                android:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="RelativeOverlap" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
     <LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,13 +96,15 @@
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_device_address"
-            android:textSize="18sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
         <Space android:layout_width="5dp"
             android:layout_height="wrap_content"/>
         <TextView android:id="@+id/device_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
     </LinearLayout>
     <LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -27,14 +113,16 @@
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_state"
-            android:textSize="18sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
         <Space android:layout_width="5dp"
             android:layout_height="wrap_content"/>
         <TextView android:id="@+id/connection_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disconnected"
-            android:textSize="18sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
     </LinearLayout>
     <LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -43,17 +131,22 @@
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_data"
-            android:textSize="18sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
         <Space android:layout_width="5dp"
             android:layout_height="wrap_content"/>
         <TextView android:id="@+id/data_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/no_data"
-            android:textSize="18sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/textColor"/>
     </LinearLayout>
+
     <ExpandableListView android:id="@+id/gatt_services_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+    </ExpandableListView>
 
 </LinearLayout>

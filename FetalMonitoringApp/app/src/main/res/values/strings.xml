@@ -1,12 +1,35 @@
 <resources>
     <string name="app_name">Fetal Monitoring</string>
-    <string name="tab_text_1">Fetal Kick</string>
-    <string name="tab_text_2">Fetal ECG</string>
-    <string name="edit_text">Connect to Device</string>
-    <string name="button_send">Monitoring</string>
-    <string name="bluetooth_page">Bluetooth</string>
-    <string name="title_activity_monitoring">Monitoring</string>
 
+    <!-- Toolbar/Splash Screen items -->
+    <string name="logo_desc">Image of fetal monitoring app logo</string>
+
+    <!-- Hamburger menu items -->
+    <string name="profile_name">Becky La</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
+    <string name="home">HOME</string>
+    <string name="data">Import Data</string>
+    <string name="heart">Heart Rate</string>
+    <string name="movement">Fetal Kicks</string>
+    <string name="led_color">LED Control</string>
+
+    <!-- Home menu items -->
+    <string name="last_recorded">Last Recorded</string>
+    <string name="info_text_home">Welcome, Becky!\nNo new information.</string>
+    <string name="heartrate_home">120</string>
+    <string name="heartrate_unit">\tbpm</string>
+    <string name="heartrate_desc">Image of a heart icon</string>
+    <string name="kicks_home">\t15</string>
+    <string name="kicks_unit">\tkicks\t\t</string>
+    <string name="kicks_desc">Image of feet icon</string>
+
+    <!-- Bluetooth menu items -->
+    <string name="connect">CONNECT</string>
+    <string name="disconnect">DISCONNECT</string>
+    <string name="scan">Scan</string>
+    <string name="stop">Stop</string>
+    <string name="discovered_devices">DISCOVERED DEVICES</string>
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="label_data">Data:</string>
     <string name="label_device_address">Device address:</string>
@@ -14,16 +37,11 @@
     <string name="no_data">No data</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="title_devices">BLE Device Scan</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
     <string name="unknown_device">Unknown device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
-
-    <!-- Menu items -->
-    <string name="menu_connect">Connect</string>
-    <string name="menu_disconnect">Disconnect</string>
-    <string name="menu_scan">Scan</string>
-    <string name="menu_stop">Stop</string>
-    <string name="menu_refresh">Refresh</string>
+    <string name="monitoring_service">Monitoring Service</string>
+    <string name="fetal_kick_characteristic">Fetal Kicks</string>
+    <string name="fetal_heartrate_characteristic">Fetal Heart Rate</string>
 </resources>
