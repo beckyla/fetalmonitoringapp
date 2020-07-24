@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 public class MovementFragment extends Fragment {
 
-    private List<Integer> movementValues;
+    private List<String> movementValues;
     private TextView kicks_home;
 
     public MovementFragment() {
@@ -45,7 +45,7 @@ public class MovementFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.movementData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Collections.reverse(movementValues); //Reverse list
-        MyMeasurementRecyclerViewAdapter adapter = new MyMeasurementRecyclerViewAdapter(getActivity(), movementValues, 1);
+        MyMeasurementRecyclerViewAdapter adapter = new MyMeasurementRecyclerViewAdapter(getActivity(), movementValues.subList(1, movementValues.size()), 1);
         recyclerView.setAdapter(adapter);
 
         //Check for back press
@@ -58,7 +58,6 @@ public class MovementFragment extends Fragment {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     ((TextView) getActivity().findViewById(R.id.toolbar_title)).setText("HOME");
                     getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    Collections.reverse(movementValues); //Undo reversed list
                     return true;
                 }
                 return false;
@@ -67,7 +66,7 @@ public class MovementFragment extends Fragment {
 
         kicks_home = view.findViewById(R.id.kicks_recent_text);
 
-        kicks_home.setText(movementValues.get(0).toString());
+        kicks_home.setText(movementValues.get(0));
 
         return view;
     }

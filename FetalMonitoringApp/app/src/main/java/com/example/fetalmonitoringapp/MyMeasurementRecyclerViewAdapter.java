@@ -13,12 +13,12 @@ import java.util.List;
 
 public class MyMeasurementRecyclerViewAdapter extends RecyclerView.Adapter<MyMeasurementRecyclerViewAdapter.ViewHolder> {
 
-    private List<Integer> mData;
+    private List<String> mData;
     private int unitIdent;
     private LayoutInflater mInflater;
 
     //Data is passed into the constructor
-    MyMeasurementRecyclerViewAdapter(Context context, List<Integer> data, int unitIdent) {
+    MyMeasurementRecyclerViewAdapter(Context context, List<String> data, int unitIdent) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.unitIdent = unitIdent;
@@ -36,9 +36,8 @@ public class MyMeasurementRecyclerViewAdapter extends RecyclerView.Adapter<MyMea
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Integer data = mData.get(position);
-        String dataStr = data.toString();
-        holder.mTextView.setText(dataStr);
+        String data = mData.get(position);
+        holder.mTextView.setText(data);
 
         if (unitIdent == 1) {
             holder.mUnitView.setText("kicks");

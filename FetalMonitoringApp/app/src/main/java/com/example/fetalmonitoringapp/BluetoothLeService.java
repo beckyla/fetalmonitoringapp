@@ -32,7 +32,7 @@ public class BluetoothLeService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     private int connectionState = STATE_DISCONNECTED;
-    List<Integer> movementValues;
+    List<String> movementValues;
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -140,10 +140,10 @@ public class BluetoothLeService extends Service {
          */
 
         if (UUID_FETAL_KICK_MEASUREMENT.equals(characteristic.getUuid())) {
-            final byte[] data = characteristic.getValue();
+            final byte[] data= characteristic.getValue();
             int fetalKicks = data[0];
             movementValues = ((MeasurementData) this.getApplication()).getMovementValues();
-            movementValues.add(fetalKicks);
+            movementValues.add(String.valueOf(fetalKicks));
             ((MeasurementData) this.getApplication()).setMovementValues(movementValues);
 
             Log.d(TAG, String.format("Received fetal kick count: %d", fetalKicks));

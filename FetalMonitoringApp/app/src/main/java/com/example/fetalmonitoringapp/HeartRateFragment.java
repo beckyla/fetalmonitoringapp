@@ -27,7 +27,7 @@ import java.util.Objects;
  */
 public class HeartRateFragment extends Fragment {
 
-    private List<Integer> heartrateValues;
+    private List<String> heartrateValues;
     private TextView heartrate_home;
 
     public HeartRateFragment() {
@@ -48,7 +48,7 @@ public class HeartRateFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.heartRateData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Collections.reverse(heartrateValues); //Reverse list
-        MyMeasurementRecyclerViewAdapter adapter = new MyMeasurementRecyclerViewAdapter(getActivity(), heartrateValues, 0);
+        MyMeasurementRecyclerViewAdapter adapter = new MyMeasurementRecyclerViewAdapter(getActivity(), heartrateValues.subList(1,heartrateValues.size()), 0);
         recyclerView.setAdapter(adapter);
 
         //Check for back press
@@ -62,7 +62,6 @@ public class HeartRateFragment extends Fragment {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     ((TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar_title)).setText("HOME");
                     getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    Collections.reverse(heartrateValues); //Undo reversed list
                     return true;
                 }
                 return false;
@@ -71,7 +70,7 @@ public class HeartRateFragment extends Fragment {
 
         heartrate_home = view.findViewById(R.id.heartrate_recent_text);
 
-        heartrate_home.setText(heartrateValues.get(0).toString());
+        heartrate_home.setText(heartrateValues.get(0));
 
         return view;
     }

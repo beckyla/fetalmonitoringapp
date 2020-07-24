@@ -15,11 +15,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Environment;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -30,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -53,11 +58,9 @@ public class MainActivity extends AppCompatActivity {
     String movementFile = "MovementData.txt";
     String heartrateFile = "HeartrateData.txt";
     String dateFile = "DateData.txt";
-    List<Integer> heartrateValues;
-    List<Integer> movementValues;
+    List<String> heartrateValues;
+    List<String> movementValues;
     List<CharSequence> dateValues;
-    EditText textmsg;
-    static final int READ_BLOCK_SIZE = 100;
 
     //Any app-defined int constant random number
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 456;
@@ -77,9 +80,15 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
         }
 
-        /*
-        File mFile = new File(getApplicationContext().getFilesDir(), movementFile);
-        File hrFile = new File(getApplicationContext().getFilesDir(), heartrateFile);
+        File path = getApplicationContext().getFilesDir();
+
+        File folder = new File(path, "MeasurementData");
+        File mFile = new File(folder + File.separator + movementFile);
+        File hrFile = new File(folder + File.separator +  heartrateFile);
+
+        if (!folder.exists()){
+            mFile.mkdir();
+        }
 
         if (!mFile.exists()){
             mFile.mkdir();
@@ -89,44 +98,31 @@ public class MainActivity extends AppCompatActivity {
             hrFile.mkdir();
         }
 
-        try {
-           loadFileInternalStorage(getApplicationContext(), movementFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            loadFileInternalStorage(getApplicationContext(), heartrateFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        String strMovementValues = readFileInternalStorage(movementFile);
+        String strHeartrateValues = readFileInternalStorage(heartrateFile);
 
-        ((MeasurementData) this.getApplication()).setHeartrateValues(heartrateValues);
-        ((MeasurementData) this.getApplication()).setMovementValues(movementValues);
-
-         */
-
-
+        if(strMovementValues == null || strHeartrateValues == null) {
             heartrateValues = ((MeasurementData) this.getApplication()).getHeartrateValues();
             movementValues = ((MeasurementData) this.getApplication()).getMovementValues();
             dateValues = ((MeasurementData) this.getApplication()).getDateValues();
 
             // Add temporary data
-            movementValues.add(15);
-            movementValues.add(13);
-            movementValues.add(13);
-            movementValues.add(14);
-            movementValues.add(12);
-            movementValues.add(18);
-            movementValues.add(15);
+            movementValues.add("15");
+            movementValues.add("13");
+            movementValues.add("13");
+            movementValues.add("14");
+            movementValues.add("12");
+            movementValues.add("18");
+            movementValues.add("15");
 
-            heartrateValues.add(123);
-            heartrateValues.add(125);
-            heartrateValues.add(120);
-            heartrateValues.add(124);
-            heartrateValues.add(122);
-            heartrateValues.add(125);
-            heartrateValues.add(123);
-            heartrateValues.add(124);
+            heartrateValues.add("123");
+            heartrateValues.add("125");
+            heartrateValues.add("120");
+            heartrateValues.add("124");
+            heartrateValues.add("122");
+            heartrateValues.add("125");
+            heartrateValues.add("123");
+            heartrateValues.add("124");
 
             Date date = new Date();
             CharSequence today  = DateFormat.format("MMMM d, yyyy ", date.getTime());
@@ -143,6 +139,28 @@ public class MainActivity extends AppCompatActivity {
             ((MeasurementData) this.getApplication()).setMovementValues(movementValues);
             ((MeasurementData) this.getApplication()).setDateValues(dateValues);
 
+        }else{
+            dateValues = ((MeasurementData) this.getApplication()).getDateValues();
+
+            movementValues = new ArrayList<>(Arrays.asList(strMovementValues.split(",")));
+            heartrateValues = new ArrayList<>(Arrays.asList(strHeartrateValues.split(",")));
+
+            ((MeasurementData) this.getApplication()).setHeartrateValues(heartrateValues);
+            ((MeasurementData) this.getApplication()).setMovementValues(movementValues);
+
+            Date date = new Date();
+            CharSequence today  = DateFormat.format("MMMM d, yyyy ", date.getTime());
+            dateValues.add(today);
+            dateValues.add(today);
+            dateValues.add(today);
+            dateValues.add(today);
+            dateValues.add(today);
+            dateValues.add(today);
+            dateValues.add(today);
+            dateValues.add(today);
+
+            ((MeasurementData) this.getApplication()).setDateValues(dateValues);
+        }
 
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -204,95 +222,54 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
-    /*
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void createData() throws FileNotFoundException {
-       loadFileInternalStorage(getApplicationContext(), movementFile);
-       loadFileInternalStorage(getApplicationContext(), heartrateFile);
-
-        ((MeasurementData) this.getApplication()).setHeartrateValues(heartrateValues);
-        ((MeasurementData) this.getApplication()).setMovementValues(movementValues);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void loadFileInternalStorage(Context context, String filename) throws FileNotFoundException {
-
-        try {
-            FileInputStream fis = new FileInputStream(new File(filename));
-            InputStreamReader InputRead= new InputStreamReader(fis);
-
-            char[] inputBuffer= new char[READ_BLOCK_SIZE];
-            String strData ="";
-            int charRead;
-
-            while ((charRead = InputRead.read(inputBuffer)) >0) {
-                // char to string conversion
-                String readstring = String.copyValueOf(inputBuffer,0,charRead);
-                strData +=readstring;
-            }
-            InputRead.close();
-            textmsg.setText(strData);
-
-            fis.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        /*
-        FileInputStream fis = context.openFileInput(filename);
-        InputStreamReader inputStreamReader =
-                new InputStreamReader(fis, StandardCharsets.UTF_8);
-
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
-
-            String line = reader.readLine();
-            while (line != null) {
-                stringBuilder.append(line).append('\n');
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } finally {
-            String contents = stringBuilder.toString();
-            List<String> data = Arrays.asList(contents.split(","));
-            List<Integer> listData = new ArrayList<>(data.size());
-            for (String str : data) {
-                listData.add(Integer.valueOf(str));
-            }
-            return listData;
-        }
-
-
-         */
-
-    /*
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    protected void onDestroy() {
+        super.onDestroy();
+        String strMovementValues = TextUtils.join(",", movementValues);
+        String strHeartrateValues = TextUtils.join(",", heartrateValues);
 
-        writeFileInternalStorage(getApplicationContext(), movementFile, movementValues);
-        writeFileInternalStorage(getApplicationContext(), heartrateFile, heartrateValues);
+        writeFileInternalStorage(movementFile, strMovementValues);
+        writeFileInternalStorage(heartrateFile, strHeartrateValues);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public boolean writeFileInternalStorage(Context context, String filename, List<Integer> fileContents){
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private String readFileInternalStorage(String filenameInternal) {
+
+        String contents = null;
+
         try {
-            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            if (fileContents.size() > 0) {
-                String strFileContents = String.join(",", (CharSequence) fileContents);
-                fos.write(Integer.parseInt(strFileContents));
+            InputStream inputStream = getApplicationContext().openFileInput(filenameInternal);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("").append(receiveString);
+                }
+
+                inputStream.close();
+                contents = stringBuilder.toString();
             }
-            return true;
+        }
+        catch (FileNotFoundException e) {
+            Log.e("error", "File not found: " + e.toString());
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            Log.e("error", "Can not read file: " + e.toString());
+        }
+
+        return contents;
+    }
+
+    private void writeFileInternalStorage(String filenameInternal , String dataValues) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(filenameInternal, Context.MODE_PRIVATE));
+            outputStreamWriter.write(dataValues);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
         }
     }
-*/
 }

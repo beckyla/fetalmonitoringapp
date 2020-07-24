@@ -24,8 +24,8 @@ import java.util.Objects;
  */
 public class HomeFragment extends Fragment {
 
-    private List<Integer> heartrateValues;
-    private List<Integer> movementValues;
+    private List<String> heartrateValues;
+    private List<String> movementValues;
     private List<CharSequence> dateValues;
     private TextView heartrate_home, kicks_home;
 
@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         heartrate_home = getView().findViewById(R.id.heartrate_home);
         kicks_home = getView().findViewById(R.id.kicks_home);
 
-        heartrate_home.setText(heartrateValues.get(heartrateValues.size()-1).toString());
-        kicks_home.setText(movementValues.get(movementValues.size()-1).toString());
+        heartrate_home.setText(heartrateValues.get(heartrateValues.size()-1));
+        kicks_home.setText(movementValues.get(movementValues.size()-1));
     }
 }
