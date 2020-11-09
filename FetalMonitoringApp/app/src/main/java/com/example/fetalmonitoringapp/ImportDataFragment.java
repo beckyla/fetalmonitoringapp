@@ -50,8 +50,6 @@ public class ImportDataFragment extends Fragment implements LeDeviceListAdapter.
     private View view;
     private static final int REQUEST_ENABLE_BT = 1;
 
-    List<String> mMovementData;
-
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 8000;
 
@@ -60,17 +58,12 @@ public class ImportDataFragment extends Fragment implements LeDeviceListAdapter.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Add temporary data
-        //mMovementData = ((MovementFragment.MovementDataApplication) getActivity().getApplicationContext()).movementData;
-        //mMovementData.add("Testing");
-
         mHandler = new Handler();
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
         if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(getActivity(), R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
             getActivity().finish();
-
         }
         // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
         // BluetoothAdapter through BluetoothManager.
@@ -87,7 +80,6 @@ public class ImportDataFragment extends Fragment implements LeDeviceListAdapter.
         view = inflater.inflate(R.layout.fragment_import_data, container, false);
 
         // Capture buttons from layout
-
         scanButton = view.findViewById(R.id.scan_fab);
         stopButton = view.findViewById(R.id.stop_fab);
         stopButton.setVisibility(View.GONE); // Remove stop button
@@ -162,7 +154,7 @@ public class ImportDataFragment extends Fragment implements LeDeviceListAdapter.
 
         // Initializes list view adapter.
         // set up the RecyclerView
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.bluetoothDevices);
+        RecyclerView recyclerView = view.findViewById(R.id.bluetoothDevices);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);

@@ -1,6 +1,5 @@
 package com.example.fetalmonitoringapp;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -10,12 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -26,6 +23,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import java.text.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +48,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     private Button connectButton, disconnectButton;
     private View connection_loading_panel;
     private BluetoothGatt mBluetoothGatt;
+    public final static UUID UUID_RAW_PIEZO_DATA = UUID.fromString("19B10000-E8F2-537E-4F6C-D104768A1224");
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -103,6 +102,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     // demonstrates 'Read' and 'Notify' features.  See
     // http://d.android.com/reference/android/bluetooth/BluetoothGatt.html for the complete
     // list of supported characteristic features.
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private final ExpandableListView.OnChildClickListener servicesListClickListner =
             new ExpandableListView.OnChildClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -112,7 +112,10 @@ public class DeviceControlActivity extends AppCompatActivity {
                         final BluetoothGattCharacteristic characteristic =
                                 mGattCharacteristics.get(groupPosition).get(childPosition);
                         final int charaProp = characteristic.getProperties();
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+
+                        if ((charaProp & BluetoothGattCharacteristic.PROPERTY_READ) != 0) {
+
+                            mNotifyCharacteristic = characteristic;
                             // If there is an active notification on a characteristic, clear
                             // it first so it doesn't update the data field on the user interface.
                             if (mNotifyCharacteristic != null) {
@@ -120,18 +123,30 @@ public class DeviceControlActivity extends AppCompatActivity {
                                         mNotifyCharacteristic, false);
                                 mNotifyCharacteristic = null;
                             }
+
                             mBluetoothLeService.readCharacteristic(characteristic);
                         }
-                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                            mNotifyCharacteristic = characteristic;
+
+                        if ((charaProp & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
                             mBluetoothLeService.setCharacteristicNotification(
                                     characteristic, true);
+                        }
+
+                        if ((charaProp & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0) {
+                            characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                    mBluetoothLeService.writeCharacteristic(characteristic);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                         return true;
                     }
                     return false;
                 }
-            };
+    };
     private void clearUI() {
         mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
         mDataField.setText(R.string.no_data);
@@ -170,8 +185,6 @@ public class DeviceControlActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        ((TextView) findViewById(R.id.toolbar_title)).setText("HOME");
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
@@ -215,7 +228,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     }
 
     public void backClick(View view) {
-        finish();
+        //finish();
     }
 
     private void updateConnectionState(final int resourceId) {
@@ -271,6 +284,12 @@ public class DeviceControlActivity extends AppCompatActivity {
                 }
                 if (uuid.equals("19b10000-e8f2-537e-4f6c-d104768a1218")){
                     unknownCharaString = getResources().getString(R.string.fetal_heartrate_characteristic);
+                }
+                if (uuid.equals("19b10000-e8f2-537e-4f6c-d104768a1224")){
+                    unknownCharaString = getResources().getString(R.string.raw_data_characteristic);
+                }
+                if (uuid.equals("19b10000-e8f2-537e-4f6c-d104768a1226")){
+                    unknownCharaString = getResources().getString(R.string.time_sync_characteristic);
                 }
                 currentCharaData.put(
                         LIST_NAME, GattAttributes.lookup(uuid, unknownCharaString));

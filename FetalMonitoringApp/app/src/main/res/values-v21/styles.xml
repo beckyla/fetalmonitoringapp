@@ -18,7 +18,7 @@
         <item name="android:statusBarColor">#29000000</item>
         <item name="statusBarForeground">@color/colorAccent</item>
         <item name="statusBarBackground">@color/colorAccent</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:fontFamily">@string/default_string</item>
     </style>
 
     <!-- Device Control Activity theme-->
@@ -26,6 +26,6 @@
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">#80ABD6</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:fontFamily">@string/default_string</item>
     </style>
 </resources>

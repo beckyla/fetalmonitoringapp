@@ -10,7 +10,7 @@
     <!-- Drawer menu style -->
     <style name="NavigationViewStyle">
         <item name="android:textSize">22sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">@string/default_string2</item>
         <item name="android:padding">2dp</item>
     </style>
 

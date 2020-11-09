@@ -10,6 +10,7 @@
     <string name="drawer_close">drawer close</string>
     <string name="home">HOME</string>
     <string name="data">Import Data</string>
+    <string name="exp_data">Export Data</string>
     <string name="heart">Heart Rate</string>
     <string name="movement">Fetal Kicks</string>
     <string name="led_color">LED Control</string>
@@ -44,4 +45,13 @@
     <string name="monitoring_service">Monitoring Service</string>
     <string name="fetal_kick_characteristic">Fetal Kicks</string>
     <string name="fetal_heartrate_characteristic">Fetal Heart Rate</string>
+    <string name="raw_data_characteristic">Raw Piezo Data</string>
+    <string name="time_sync_characteristic">Time Sync</string>
+
+    <!-- Export data items -->
+    <string name="export">Export</string>
+
+    <!-- Font string-->
+    <string name="default_string">sans-serif-light</string>
+    <string name="default_string2">sans-serif</string>
 </resources>

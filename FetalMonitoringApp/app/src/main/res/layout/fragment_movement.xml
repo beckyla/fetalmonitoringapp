@@ -20,12 +20,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/date_value"
+                android:id="@+id/date_recent_kick"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="13/05"
                 android:textColor="@color/textColor"
-                android:textSize="28sp" />
+                android:textSize="26sp" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -14,13 +14,16 @@ import java.util.List;
 public class MyMeasurementRecyclerViewAdapter extends RecyclerView.Adapter<MyMeasurementRecyclerViewAdapter.ViewHolder> {
 
     private List<String> mData;
+    private List<String> mDate;
     private int unitIdent;
     private LayoutInflater mInflater;
+    ItemClickListener clickListener;
 
     //Data is passed into the constructor
-    MyMeasurementRecyclerViewAdapter(Context context, List<String> data, int unitIdent) {
+    MyMeasurementRecyclerViewAdapter(Context context, List<String> data, int unitIdent, List<String> date) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.mDate = date;
         this.unitIdent = unitIdent;
     }
 
@@ -39,6 +42,9 @@ public class MyMeasurementRecyclerViewAdapter extends RecyclerView.Adapter<MyMea
         String data = mData.get(position);
         holder.mTextView.setText(data);
 
+        String date = mDate.get(position);
+        holder.mDateView.setText(date);
+
         if (unitIdent == 1) {
             holder.mUnitView.setText("kicks");
         } else{
@@ -53,15 +59,32 @@ public class MyMeasurementRecyclerViewAdapter extends RecyclerView.Adapter<MyMea
     }
 
     //Stores and recycles views as they are scrolled off screen
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mTextView;
         TextView mUnitView;
+        TextView mDateView;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTextView = itemView.findViewById(R.id.measurement_values);
             mUnitView = itemView.findViewById(R.id.measurement_unit);
+            mDateView = itemView.findViewById(R.id.date_value);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
+        }
+    }
+
+    // allows clicks events to be caught
+    void setClickListener(ItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+    }
+
+    // parent activity will implement this method to respond to click events
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

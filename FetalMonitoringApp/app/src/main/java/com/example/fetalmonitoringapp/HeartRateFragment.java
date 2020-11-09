@@ -21,14 +21,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HeartRateFragment extends Fragment {
 
-    private List<String> heartrateValues;
-    private TextView heartrate_home;
+    private List<String> heartrateValues = new ArrayList<>();
+    private List<String> heartrateDates = new ArrayList<>();
 
     public HeartRateFragment() {
         // Required empty public constructor
@@ -44,11 +43,24 @@ public class HeartRateFragment extends Fragment {
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_heartrate, container, false);
+
         // set up the RecyclerView
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.heartRateData);
+        RecyclerView recyclerView = view.findViewById(R.id.heartRateData);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Collections.reverse(heartrateValues); //Reverse list
-        MyMeasurementRecyclerViewAdapter adapter = new MyMeasurementRecyclerViewAdapter(getActivity(), heartrateValues.subList(1,heartrateValues.size()), 0);
+
+        // Add temporary dates for heart rate values
+        heartrateDates.add("07/09/2020");
+        heartrateDates.add("08/09/2020");
+        heartrateDates.add("09/09/2020");
+        heartrateDates.add("10/09/2020");
+        heartrateDates.add("11/09/2020");
+        heartrateDates.add("12/09/2020");
+        heartrateDates.add("13/09/2020");
+        heartrateDates.add("14/09/2020");
+        Collections.reverse(heartrateDates);
+
+        MyMeasurementRecyclerViewAdapter adapter = new MyMeasurementRecyclerViewAdapter(getActivity(), heartrateValues.subList(1,heartrateValues.size()), 0, heartrateDates.subList(1,heartrateDates.size()));
         recyclerView.setAdapter(adapter);
 
         //Check for back press
@@ -68,9 +80,11 @@ public class HeartRateFragment extends Fragment {
             }
         });
 
-        heartrate_home = view.findViewById(R.id.heartrate_recent_text);
+        TextView heartrate_home = view.findViewById(R.id.heartrate_recent_text);
+        TextView heartrate_date = view.findViewById(R.id.date_recent_hr);
 
         heartrate_home.setText(heartrateValues.get(0));
+        heartrate_date.setText(heartrateDates.get(0));
 
         return view;
     }
@@ -78,6 +92,7 @@ public class HeartRateFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Collections.reverse(heartrateValues); //Undo reversed list
+        Collections.reverse(heartrateValues);
+        Collections.reverse(heartrateDates); //Undo reversed list
     }
 }

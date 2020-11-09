@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -25,9 +26,7 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
 
     private List<String> heartrateValues;
-    private List<String> movementValues;
-    private List<CharSequence> dateValues;
-    private TextView heartrate_home, kicks_home;
+    private List<MainActivity.piezoInfo> piezoInfoData;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -38,21 +37,22 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        heartrateValues = ((MeasurementData) getActivity().getApplication()).getHeartrateValues();
-        movementValues = ((MeasurementData) getActivity().getApplication()).getMovementValues();
+        heartrateValues = ((MeasurementData) Objects.requireNonNull(getActivity()).getApplication()).getHeartrateValues();
+        piezoInfoData = ((MeasurementData) (getActivity()).getApplication()).getPiezoInfoData();
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        heartrate_home = getView().findViewById(R.id.heartrate_home);
-        kicks_home = getView().findViewById(R.id.kicks_home);
+        TextView heartrate_home = Objects.requireNonNull(getView()).findViewById(R.id.heartrate_home);
+        TextView kicks_home = getView().findViewById(R.id.kicks_home);
 
         heartrate_home.setText(heartrateValues.get(heartrateValues.size()-1));
-        kicks_home.setText(movementValues.get(movementValues.size()-1));
+        kicks_home.setText(String.valueOf(piezoInfoData.get(piezoInfoData.size()-1).totalKicks));
     }
 }

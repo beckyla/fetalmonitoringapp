@@ -7,6 +7,9 @@
         <item android:id="@+id/nav_import"
             android:icon="@drawable/importdata"
             android:title="@string/data"/>
+        <item android:id="@+id/nav_export"
+            android:icon="@drawable/exportdata"
+            android:title="@string/exp_data"/>
         <item android:id="@+id/nav_heart"
             android:icon="@drawable/heartrate"
             android:title="@string/heart"/>
